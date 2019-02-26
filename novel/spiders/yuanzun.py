@@ -1,6 +1,6 @@
 import scrapy
 from novel.items import NovelItem
-
+import logging
 
 class YuanZun(scrapy.Spider):
     name = "yuanzun"
@@ -21,7 +21,10 @@ class YuanZun(scrapy.Spider):
         for quote in response.css("div#list dd a"):
             next_page = quote.css("a::attr(href)").get()
             if next_page is not None:
+                logging.info("next_page is :"+next_page)
                 yield response.follow(next_page, self.parse_content)
+
+        logging.info("Append done.")
 
     # 抽取每个页面的标题和内容
     def parse_content(self, response):
